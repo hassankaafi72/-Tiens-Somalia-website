@@ -70,10 +70,179 @@ TIENS Cordyceps Capsules contain high-quality Cordyceps Sinensis, a rare and pre
 
 ## Global Health Heritage of TIENS
 Derived from the high-altitude plateaus of the Himalayas, TIENS utilizes fermentation technology to cultivate Pure Cordyceps without harming the environment, delivering ancient wisdom through modern science.
+`,
+  "Chitosan Capsules": `
+## Product Overview
+TIENS Chitosan is a high-quality dietary fiber derived from the shells of crustaceans. It is known as the "Sixth Vital Element of Life" and is prized for its ability to bind with dietary fats, supporting weight management and digestive regularity.
+
+## Nutritional Bio-Data
+*   **Deacetylated Chitosan (85%):** High purity fiber that acts as an adsorbent for fats and toxins.
+*   **Chitin:** Provides structural support for healthy gut bacteria and immune responses.
+
+## Usage Guidelines
+*   Take 2 capsules twice daily.
+*   Best taken 20 minutes before fatty meals with plenty of water.
+
+## Global Health Heritage of TIENS
+TIENS Chitosan is part of our "Cleansing" philosophy, focusing on internal detox and metabolic balance to achieve long-term health.
+`,
+  "Spirulina Capsules": `
+## Product Overview
+TIENS Spirulina is a nutrient-dense blue-green algae, considered one of the most complete superfoods on Earth. It is exceptionally high in protein, vitamins, and antioxidants, making it an ideal supplement for energy and recovery.
+
+## Nutritional Bio-Data
+*   **Phycocyanin:** A unique antioxidant that supports cellular protection and blood health.
+*   **Essential Amino Acids:** Provides all 8 essential amino acids required by the human body.
+*   **Iron & Beta-Carotene:** Supports energy levels and healthy vision.
+
+## Usage Guidelines
+*   Take 2-4 capsules daily.
+*   Can be taken at any time, but ideally in the morning for all-day energy.
+
+## Global Health Heritage of TIENS
+Our spirulina is cultivated in pristine lake environments, ensuring zero contamination and maximum nutritional density for our Somali customers.
+`,
+  "Lipid Metabolic Tea": `
+## Product Overview
+TIENS Antilipemic Tea (Lipid Metabolic Management Tea) is a specialized blend of traditional herbs designed to support healthy lipid levels, clear internal heat, and aid digestion. It is a daily wellness essential for metabolic health.
+
+## Nutritional Bio-Data
+*   **Gynostemma Pentaphyllum:** Often called "Southern Ginseng," it supports immune function and cholesterol balance.
+*   **Folium Nelumbinis (Lotus Leaf):** Traditionally used to support weight management and reduce heat.
+*   **Green Tea:** High in catechins that boost metabolism and provide antioxidant protection.
+
+## Usage Guidelines
+*   Steep 1 tea bag in hot water for 10 minutes.
+*   Drink 1-2 times daily. Each tea bag can be used multiple times.
+
+## Global Health Heritage of TIENS
+This tea represents the fusion of Chinese herbal wisdom and modern bio-extraction, helping millions manage their metabolism naturally.
 `
 };
 
+const ALL_PRODUCTS = [
+  {
+    title: "TIENS Nutrient Calcium",
+    description: "Our flagship calcium powder with high absorption rate, promoting bone density and overall skeletal health.",
+    image: "https://picsum.photos/seed/calcium/400/400",
+    category: "Balanced Nutrition"
+  },
+  {
+    title: "Zinc Supplements",
+    description: "Essential for protein synthesis and cell division, tailored for daily vitality and immune resilience.",
+    image: "https://picsum.photos/seed/zinc/400/400",
+    category: "Vitality"
+  },
+  {
+    title: "Pure Cordyceps",
+    description: "Highly valued traditional supplement for respiratory health and enhancing physical endurance.",
+    image: "https://picsum.photos/seed/cordy/400/400",
+    category: "Immunity"
+  },
+  {
+    title: "Chitosan Capsules",
+    description: "High-quality dietary fiber that helps maintain healthy cholesterol levels and supports digestive health.",
+    image: "https://picsum.photos/seed/chitosan/400/400",
+    category: "Cleansing"
+  },
+  {
+    title: "Spirulina Capsules",
+    description: "A nutrient-rich superfood containing essential proteins, vitamins, and minerals for immune support and energy.",
+    image: "https://picsum.photos/seed/spirulina/400/400",
+    category: "Superfood"
+  },
+  {
+    title: "Lipid Metabolic Tea",
+    description: "Traditional herbal blend designed to support healthy lipid levels and overall metabolic management.",
+    image: "https://picsum.photos/seed/tea/400/400",
+    category: "Metabolism"
+  }
+];
+
 // --- Components ---
+const AllProductsView = ({ onSelectProduct, onClose }: { onSelectProduct: (p: any) => void; onClose: () => void }) => {
+  useEffect(() => {
+    document.body.style.overflow = 'hidden';
+    return () => {
+      document.body.style.overflow = 'unset';
+    };
+  }, []);
+
+  return (
+    <div 
+      className="fixed inset-0 z-[9000] bg-slate-50 overflow-y-auto"
+      style={{ height: '100vh', width: '100vw' }}
+    >
+      <motion.div
+        initial={{ opacity: 0 }}
+        animate={{ opacity: 1 }}
+        exit={{ opacity: 0 }}
+        className="min-h-screen pb-32"
+      >
+        <nav className="sticky top-0 w-full z-[9100] bg-white/95 backdrop-blur-md border-b border-slate-200 py-6 shadow-sm">
+          <div className="max-w-7xl mx-auto px-6 md:px-12 flex justify-between items-center">
+            <div className="flex items-center gap-3">
+              <div className="w-10 h-10 bg-emerald-600 rounded-lg flex items-center justify-center">
+                <span className="text-white font-bold text-lg">T</span>
+              </div>
+              <h2 className="text-xl font-extrabold text-slate-800 uppercase tracking-tight">Full Product Catalog</h2>
+            </div>
+            <button 
+              onClick={onClose}
+              className="group flex items-center gap-2 text-sm font-bold text-slate-500 hover:text-emerald-600 transition-all uppercase tracking-widest cursor-pointer"
+            >
+              <X size={20} /> Back to Home
+            </button>
+          </div>
+        </nav>
+
+        <div className="max-w-7xl mx-auto px-6 md:px-12 pt-20">
+          <div className="mb-16">
+            <span className="text-emerald-600 font-bold uppercase tracking-widest text-xs mb-4 block">Official Somalian Inventory</span>
+            <h1 className="text-4xl md:text-6xl font-extrabold text-slate-800 leading-tight">
+              TIENS Health & <br /> Wellness Solutions.
+            </h1>
+            <p className="text-slate-500 mt-6 max-w-2xl text-lg leading-relaxed">
+              Explore our complete range of biotechnology products, derived from natural ingredients and manufactured under strict international quality standards.
+            </p>
+          </div>
+
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+            {ALL_PRODUCTS.map((p, i) => (
+              <motion.div
+                key={p.title}
+                initial={{ opacity: 0, y: 20 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ delay: i * 0.05 }}
+                className="bg-white p-8 rounded-3xl border border-slate-100 hover:border-emerald-200 hover:shadow-2xl transition-all group"
+              >
+                <div className="aspect-square bg-slate-50 rounded-2xl mb-8 flex items-center justify-center p-8 overflow-hidden">
+                  <img 
+                    src={p.image} 
+                    alt={p.title} 
+                    className="max-h-full max-w-full object-contain group-hover:scale-110 transition-transform duration-500"
+                    referrerPolicy="no-referrer"
+                  />
+                </div>
+                <div className="inline-block px-3 py-1 bg-slate-100 text-slate-500 text-[10px] font-bold rounded-md uppercase tracking-wider mb-4">
+                  {p.category}
+                </div>
+                <h3 className="text-2xl font-bold text-slate-800 mb-3">{p.title}</h3>
+                <p className="text-slate-500 text-sm leading-relaxed mb-8">{p.description}</p>
+                <button 
+                  onClick={() => onSelectProduct(p)}
+                  className="flex items-center gap-2 text-emerald-600 font-bold text-sm uppercase tracking-widest hover:gap-3 transition-all cursor-pointer"
+                >
+                  Read Bio-Data <ChevronRight size={16} />
+                </button>
+              </motion.div>
+            ))}
+          </div>
+        </div>
+      </motion.div>
+    </div>
+  );
+};
 const ArticleView = ({ product, onClose }: { product: any; onClose: () => void }) => {
   const content = PRODUCT_ARTICLES[product.title] || "Detailed bio-data for this product is currently being updated in our archives. Please contact our Mogadishu headquarters for the printed catalog.";
 
@@ -455,24 +624,8 @@ const ProductCard = ({ title, description, image, delay, onClick }: ProductCardP
   </motion.div>
 );
 
-const Products = ({ onSelectProduct }: { onSelectProduct: (p: any) => void }) => {
-  const products = [
-    {
-      title: "TIENS Nutrient Calcium",
-      description: "Our flagship calcium powder with high absorption rate, promoting bone density and overall skeletal health.",
-      image: "https://picsum.photos/seed/calcium/400/400"
-    },
-    {
-      title: "Zinc Supplements",
-      description: "Essential for protein synthesis and cell division, tailored for daily vitality and immune resilience.",
-      image: "https://picsum.photos/seed/zinc/400/400"
-    },
-    {
-      title: "Pure Cordyceps",
-      description: "Highly valued traditional supplement for respiratory health and enhancing physical endurance.",
-      image: "https://picsum.photos/seed/cordy/400/400"
-    }
-  ];
+const Products = ({ onSelectProduct, onViewAll }: { onSelectProduct: (p: any) => void; onViewAll: () => void }) => {
+  const featuredProducts = ALL_PRODUCTS.slice(0, 3);
 
   return (
     <section id="products" className="py-32 bg-slate-50">
@@ -482,13 +635,16 @@ const Products = ({ onSelectProduct }: { onSelectProduct: (p: any) => void }) =>
             subtitle="Premium Bio-Tech" 
             title="Supplements & Equipment" 
           />
-          <button className="flex items-center gap-2 text-slate-800 font-bold border-b-2 border-emerald-600/20 hover:border-emerald-600 pb-1 transition-all mb-4">
+          <button 
+            onClick={onViewAll}
+            className="flex items-center gap-2 text-slate-800 font-bold border-b-2 border-emerald-600/20 hover:border-emerald-600 pb-1 transition-all mb-4 cursor-pointer"
+          >
             View All Products <ArrowRight size={16} />
           </button>
         </div>
 
         <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
-          {products.map((p, i) => (
+          {featuredProducts.map((p, i) => (
             <ProductCard 
               key={i} 
               title={p.title} 
@@ -735,6 +891,7 @@ const Footer = () => {
 
 export default function App() {
   const [selectedProduct, setSelectedProduct] = useState<any>(null);
+  const [showAllProducts, setShowAllProducts] = useState(false);
 
   return (
     <div className="relative font-sans antialiased text-zinc-800">
@@ -747,11 +904,26 @@ export default function App() {
         )}
       </AnimatePresence>
 
+      <AnimatePresence>
+        {showAllProducts && (
+          <AllProductsView 
+            onSelectProduct={(p) => {
+              setShowAllProducts(false);
+              setTimeout(() => setSelectedProduct(p), 300);
+            }} 
+            onClose={() => setShowAllProducts(false)} 
+          />
+        )}
+      </AnimatePresence>
+
       <Navbar />
       <main>
         <Hero />
         <About />
-        <Products onSelectProduct={setSelectedProduct} />
+        <Products 
+          onSelectProduct={setSelectedProduct} 
+          onViewAll={() => setShowAllProducts(true)} 
+        />
         <Opportunity />
         <Contact />
       </main>
