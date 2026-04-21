@@ -78,81 +78,95 @@ const ArticleView = ({ product, onClose }: { product: any; onClose: () => void }
   const content = PRODUCT_ARTICLES[product.title] || "Detailed bio-data for this product is currently being updated in our archives. Please contact our Mogadishu headquarters for the printed catalog.";
 
   useEffect(() => {
+    // Lock body scroll and reset scroll position
+    document.body.style.overflow = 'hidden';
     window.scrollTo(0, 0);
-  }, [product]);
+    return () => {
+      document.body.style.overflow = 'unset';
+    };
+  }, []);
 
   return (
-    <motion.div 
-      initial={{ opacity: 0 }}
-      animate={{ opacity: 1 }}
-      exit={{ opacity: 0 }}
-      className="fixed inset-0 z-[100] bg-white overflow-y-auto"
+    <div 
+      className="fixed inset-0 z-[9999] bg-white overflow-y-scroll"
+      style={{ height: '100vh', width: '100vw' }}
     >
-      <nav className="sticky top-0 w-full z-50 bg-white/80 backdrop-blur-md border-b border-slate-100 py-4">
-        <div className="max-w-4xl mx-auto px-6 flex justify-between items-center">
-          <div className="flex items-center gap-2">
-            <div className="w-8 h-8 bg-emerald-600 rounded-md flex items-center justify-center">
-              <span className="text-white font-bold text-xs">T</span>
+      <motion.div
+        initial={{ opacity: 0, y: 10 }}
+        animate={{ opacity: 1, y: 0 }}
+        exit={{ opacity: 0, y: 10 }}
+        transition={{ duration: 0.3 }}
+        className="min-h-screen pb-20"
+      >
+        <nav className="sticky top-0 w-full z-[10000] bg-white/95 backdrop-blur-md border-b border-slate-100 py-4 shadow-sm">
+          <div className="max-w-4xl mx-auto px-6 flex justify-between items-center">
+            <div className="flex items-center gap-2">
+              <div className="w-8 h-8 bg-emerald-600 rounded-md flex items-center justify-center">
+                <span className="text-white font-bold text-xs">T</span>
+              </div>
+              <span className="text-sm font-extrabold text-slate-800 uppercase tracking-tighter">Bio-Data Archive</span>
             </div>
-            <span className="text-sm font-extrabold text-slate-800 uppercase tracking-tighter">Bio-Data Archive</span>
+            <button 
+              onClick={(e) => {
+                e.stopPropagation();
+                onClose();
+              }}
+              className="flex items-center gap-1 text-xs font-bold text-slate-500 hover:text-emerald-600 transition-all uppercase tracking-widest cursor-pointer p-2 rounded-lg hover:bg-slate-50"
+            >
+              <X size={18} /> Close Report
+            </button>
           </div>
-          <button 
-            onClick={onClose}
-            className="flex items-center gap-1 text-xs font-bold text-slate-500 hover:text-emerald-600 transition-all uppercase tracking-widest"
-          >
-            <X size={16} /> Close Report
-          </button>
-        </div>
-      </nav>
+        </nav>
 
-      <div className="max-w-4xl mx-auto px-6 py-16">
-        <div className="grid grid-cols-1 md:grid-cols-12 gap-12 mb-16 items-center">
-          <div className="md:col-span-8 space-y-4">
-            <div className="inline-block px-3 py-1 bg-emerald-100 text-emerald-700 text-[10px] font-bold rounded-md uppercase tracking-wider">
-              Clinical Bio-Data Report
+        <div className="max-w-4xl mx-auto px-6 py-16">
+          <div className="grid grid-cols-1 md:grid-cols-12 gap-12 mb-16 items-center">
+            <div className="md:col-span-8 space-y-4">
+              <div className="inline-block px-3 py-1 bg-emerald-100 text-emerald-700 text-[10px] font-bold rounded-md uppercase tracking-wider">
+                Clinical Bio-Data Report
+              </div>
+              <h1 className="text-4xl md:text-5xl font-extrabold text-slate-800 leading-tight">
+                {product.title}
+              </h1>
             </div>
-            <h1 className="text-4xl md:text-5xl font-extrabold text-slate-800 leading-tight">
-              {product.title}
-            </h1>
+            <div className="md:col-span-4 bg-slate-50 p-4 rounded-3xl border border-slate-100 flex items-center justify-center">
+              <img 
+                src={product.image} 
+                alt={product.title} 
+                className="max-h-48 object-contain"
+                referrerPolicy="no-referrer"
+              />
+            </div>
           </div>
-          <div className="md:col-span-4 bg-slate-50 p-4 rounded-3xl border border-slate-100 flex items-center justify-center">
-            <img 
-              src={product.image} 
-              alt={product.title} 
-              className="max-h-48 object-contain"
-              referrerPolicy="no-referrer"
-            />
+
+          <div className="article-content bg-white">
+            <ReactMarkdown
+              components={{
+                h2: ({ ...props }) => <h2 className="text-2xl font-bold text-slate-800 mt-12 mb-6" {...props} />,
+                h3: ({ ...props }) => <h3 className="text-xl font-bold text-slate-800 mt-8 mb-4 border-l-4 border-emerald-500 pl-4" {...props} />,
+                p: ({ ...props }) => <p className="text-slate-600 leading-relaxed mb-6" {...props} />,
+                ul: ({ ...props }) => <ul className="list-disc list-outside ml-6 space-y-3 mb-8 text-slate-600" {...props} />,
+                li: ({ ...props }) => <li className="pl-2" {...props} />,
+                strong: ({ ...props }) => <strong className="text-emerald-700 font-extrabold" {...props} />,
+              }}
+            >
+              {content}
+            </ReactMarkdown>
+          </div>
+
+          <div className="mt-20 pt-10 border-t border-slate-100 flex flex-col md:flex-row justify-between items-center gap-8">
+            <p className="text-xs text-slate-400 font-medium max-w-md">
+              Note: This bio-data is for informational purposes. Consult with a Tiens Somalia certified health consultant for personalized wellness advice.
+            </p>
+            <button 
+              onClick={onClose}
+              className="bg-slate-900 text-white px-8 py-3 rounded-lg font-bold text-sm hover:bg-slate-800 transition-all shadow-lg active:scale-95 cursor-pointer"
+            >
+              Back to Catalog
+            </button>
           </div>
         </div>
-
-        <div className="article-content">
-          <ReactMarkdown
-            components={{
-              h2: ({ ...props }) => <h2 className="text-2xl font-bold text-slate-800 mt-12 mb-6" {...props} />,
-              h3: ({ ...props }) => <h3 className="text-xl font-bold text-slate-800 mt-8 mb-4 border-l-4 border-emerald-500 pl-4" {...props} />,
-              p: ({ ...props }) => <p className="text-slate-600 leading-relaxed mb-6" {...props} />,
-              ul: ({ ...props }) => <ul className="list-disc list-outside ml-6 space-y-3 mb-8 text-slate-600" {...props} />,
-              li: ({ ...props }) => <li className="pl-2" {...props} />,
-              strong: ({ ...props }) => <strong className="text-emerald-700 font-extrabold" {...props} />,
-            }}
-          >
-            {content}
-          </ReactMarkdown>
-        </div>
-
-        <div className="mt-20 pt-10 border-t border-slate-100 flex flex-col md:flex-row justify-between items-center gap-8">
-          <p className="text-xs text-slate-400 font-medium max-w-md">
-            Note: This bio-data is for informational purposes. Consult with a Tiens Somalia certified health consultant for personalized wellness advice.
-          </p>
-          <button 
-            onClick={onClose}
-            className="bg-slate-900 text-white px-8 py-3 rounded-lg font-bold text-sm hover:bg-slate-800 transition-all shadow-lg active:scale-95"
-          >
-            Back to Catalog
-          </button>
-        </div>
-      </div>
-    </motion.div>
+      </motion.div>
+    </div>
   );
 };
 
@@ -429,12 +443,15 @@ const ProductCard = ({ title, description, image, delay, onClick }: ProductCardP
     <p className="text-slate-500 mb-8 leading-relaxed line-clamp-2">
       {description}
     </p>
-    <button 
-      onClick={onClick}
-      className="flex items-center gap-2 text-emerald-600 font-bold text-sm uppercase tracking-widest group-hover:gap-3 transition-all hover:text-emerald-700"
+    <div 
+      onClick={(e) => {
+        e.stopPropagation();
+        if (onClick) onClick();
+      }}
+      className="inline-flex items-center gap-2 text-emerald-600 font-bold text-sm uppercase tracking-widest group-hover:gap-3 transition-all hover:text-emerald-700 cursor-pointer select-none"
     >
       Read Bio-Data <ChevronRight size={16} />
-    </button>
+    </div>
   </motion.div>
 );
 
