@@ -19,8 +19,19 @@ import {
   Award
 } from 'lucide-react';
 
-// --- AI Initialization ---
-const ai = new GoogleGenAI({ apiKey: process.env.GEMINI_API_KEY });
+// --- AI Utilities ---
+let aiInstance: GoogleGenAI | null = null;
+
+const getAI = () => {
+  if (!aiInstance) {
+    const apiKey = process.env.GEMINI_API_KEY;
+    if (!apiKey || apiKey === "MY_GEMINI_API_KEY") {
+      throw new Error("GEMINI_API_KEY is not configured in secrets.");
+    }
+    aiInstance = new GoogleGenAI({ apiKey });
+  }
+  return aiInstance;
+};
 
 // --- Components ---
 const Loader = () => (
@@ -33,10 +44,12 @@ const Loader = () => (
 const ArticleView = ({ product, onClose }: { product: any; onClose: () => void }) => {
   const [content, setContent] = useState('');
   const [loading, setLoading] = useState(true);
+  const [error, setError] = useState<string | null>(null);
 
   useEffect(() => {
     const fetchArticle = async () => {
       try {
+        const ai = getAI();
         const response = await ai.models.generateContent({
           model: 'gemini-3-flash-preview',
           contents: `Write a professional health and wellness article about the TIENS product: "${product.title}". 
@@ -49,10 +62,10 @@ const ArticleView = ({ product, onClose }: { product: any; onClose: () => void }
           
           Use a formal, authoritative, yet encouraging tone. Format the output in Markdown with clear headings.`,
         });
-        setContent(response.text || '');
-      } catch (error) {
-        console.error('Gemini Error:', error);
-        setContent('Error loading bio-data. Please check your connection and try again.');
+        setContent(response.text || 'No content generated.');
+      } catch (err: any) {
+        console.error('Gemini Error:', err);
+        setError(err.message || 'Failed to connect to Bio-Data Archive.');
       } finally {
         setLoading(false);
       }
@@ -108,6 +121,21 @@ const ArticleView = ({ product, onClose }: { product: any; onClose: () => void }
 
         {loading ? (
           <Loader />
+        ) : error ? (
+          <div className="bg-red-50 border border-red-100 p-8 rounded-3xl text-red-700 space-y-4">
+            <h3 className="font-bold text-lg">Bio-Data Archive Offline</h3>
+            <p className="text-sm opacity-90 leading-relaxed">
+              {error.includes("apiKey") || error.includes("configured") 
+                ? "The Bio-Data Archive requires a valid API key. Please ensure the GEMINI_API_KEY is correctly set in the Secrets panel."
+                : "We encountered an error while retrieving the product data. Please try again later."}
+            </p>
+            <button 
+              onClick={onClose}
+              className="bg-white text-red-700 px-6 py-2 rounded-lg text-sm font-bold shadow-sm"
+            >
+              Return to Catalog
+            </button>
+          </div>
         ) : (
           <div className="article-content">
             <ReactMarkdown
