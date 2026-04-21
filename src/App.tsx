@@ -1,7 +1,6 @@
 import { useState, useEffect, Key } from 'react';
 import { motion, AnimatePresence } from 'motion/react';
 import ReactMarkdown from 'react-markdown';
-import { GoogleGenAI } from "@google/genai";
 import { 
   Menu, 
   X, 
@@ -19,59 +18,66 @@ import {
   Award
 } from 'lucide-react';
 
-// --- AI Utilities ---
-let aiInstance: GoogleGenAI | null = null;
+// --- Static Bio-Data Content ---
+const PRODUCT_ARTICLES: Record<string, string> = {
+  "TIENS Nutrient Calcium": `
+## Product Overview
+TIENS Nutrient Super Calcium Powder is a world-renowned health supplement specifically designed to improve bone density and prevent calcium deficiency. It is formulated using advanced bio-technology to ensure a high absorption rate of up to 95%, which is significantly higher than traditional calcium supplements.
 
-const getAI = () => {
-  if (!aiInstance) {
-    const apiKey = process.env.GEMINI_API_KEY;
-    if (!apiKey || apiKey === "MY_GEMINI_API_KEY") {
-      throw new Error("GEMINI_API_KEY is not configured in secrets.");
-    }
-    aiInstance = new GoogleGenAI({ apiKey });
-  }
-  return aiInstance;
+## Nutritional Bio-Data
+*   **Enzymolysis Bone Calcium Powder:** Derived from organic bovine bone, providing a natural source of calcium, phosphorus, and essential minerals.
+*   **Vitamin D3:** Enhances the absorption of calcium in the small intestine and its deposition into the bone matrix.
+*   **Vitamin A & C:** Supports immune function and collagen synthesis for joint health.
+*   **Oligosaccharides:** Promotes healthy gut flora, aiding in overall nutrient assimilation.
+
+## Usage Guidelines
+*   Mix 1 sachet with warm water (60-70°C).
+*   Consume 1-2 times daily, preferably after meals.
+*   Recommended for adults seeking bone strength, teeth health, and metabolic balance.
+
+## Global Health Heritage of TIENS
+Tiens has been a global leader in calcium technology for over 25 years. Our unique enzymolysis process respects the body's natural chemistry, making it a trusted household name in 190 countries.
+`,
+  "Zinc Supplements": `
+## Product Overview
+TIENS Zinc Capsules are essential for supporting the body's metabolic functions, protein synthesis, and healthy cell growth. Zinc is a "trace element of life" that plays a crucial role in over 300 enzymatic reactions within the human body.
+
+## Nutritional Bio-Data
+*   **Lanolin Zinc:** A highly bio-available form of Zinc that is gentle on the stomach and rapidly absorbed by the bloodstream.
+*   **Glucose:** Provides a quick energy source to support the metabolic transport of zinc.
+*   **Egg Protein Powder:** Acts as a carrier protein to ensure the stability and transport of the zinc molecules to vital organs.
+
+## Usage Guidelines
+*   For children: 1-2 capsules daily.
+*   For adults: 3-4 capsules daily.
+*   Best taken with warm water for optimal absorption.
+
+## Global Health Heritage of TIENS
+Zinc is fundamental to TIENS' holistic approach to wellness. We ensure our supplements are pure, potent, and free from synthetic fillers, reflecting our commitment to natural health restoration.
+`,
+  "Pure Cordyceps": `
+## Product Overview
+TIENS Cordyceps Capsules contain high-quality Cordyceps Sinensis, a rare and precious fungus known in traditional wellness for its "Life-Force" enhancing properties. It is a powerful adaptogen that helps the body cope with physical and mental stress while improving respiratory efficiency.
+
+## Nutritional Bio-Data
+*   **Cordycepin:** A natural compound that supports respiratory health and enhances lung capacity.
+*   **Adenosine:** Promotes natural energy production at the cellular level (ATP), reducing fatigue.
+*   **Polysaccharides:** Rich in antioxidants that bolster the immune system and protect against environmental toxins.
+
+## Usage Guidelines
+*   Take 1-2 capsules 2 times daily.
+*   Ideal for athletes, professionals with high-stress loads, and individuals seeking respiratory support.
+
+## Global Health Heritage of TIENS
+Derived from the high-altitude plateaus of the Himalayas, TIENS utilizes fermentation technology to cultivate Pure Cordyceps without harming the environment, delivering ancient wisdom through modern science.
+`
 };
 
 // --- Components ---
-const Loader = () => (
-  <div className="flex flex-col items-center justify-center p-20 space-y-4">
-    <div className="w-12 h-12 border-4 border-emerald-100 border-t-emerald-600 rounded-full animate-spin"></div>
-    <p className="text-slate-400 font-bold text-xs uppercase tracking-widest animate-pulse">Analyzing Bio-Data...</p>
-  </div>
-);
-
 const ArticleView = ({ product, onClose }: { product: any; onClose: () => void }) => {
-  const [content, setContent] = useState('');
-  const [loading, setLoading] = useState(true);
-  const [error, setError] = useState<string | null>(null);
+  const content = PRODUCT_ARTICLES[product.title] || "Detailed bio-data for this product is currently being updated in our archives. Please contact our Mogadishu headquarters for the printed catalog.";
 
   useEffect(() => {
-    const fetchArticle = async () => {
-      try {
-        const ai = getAI();
-        const response = await ai.models.generateContent({
-          model: 'gemini-3-flash-preview',
-          contents: `Write a professional health and wellness article about the TIENS product: "${product.title}". 
-          
-          Include sections for:
-          1. Product Overview (detailed efficacy).
-          2. Nutritional Bio-Data (scientific benefits of ingredients).
-          3. Usage Guidelines.
-          4. Global Health Heritage of TIENS.
-          
-          Use a formal, authoritative, yet encouraging tone. Format the output in Markdown with clear headings.`,
-        });
-        setContent(response.text || 'No content generated.');
-      } catch (err: any) {
-        console.error('Gemini Error:', err);
-        setError(err.message || 'Failed to connect to Bio-Data Archive.');
-      } finally {
-        setLoading(false);
-      }
-    };
-
-    fetchArticle();
     window.scrollTo(0, 0);
   }, [product]);
 
@@ -119,39 +125,20 @@ const ArticleView = ({ product, onClose }: { product: any; onClose: () => void }
           </div>
         </div>
 
-        {loading ? (
-          <Loader />
-        ) : error ? (
-          <div className="bg-red-50 border border-red-100 p-8 rounded-3xl text-red-700 space-y-4">
-            <h3 className="font-bold text-lg">Bio-Data Archive Offline</h3>
-            <p className="text-sm opacity-90 leading-relaxed">
-              {error.includes("apiKey") || error.includes("configured") 
-                ? "The Bio-Data Archive requires a valid API key. Please ensure the GEMINI_API_KEY is correctly set in the Secrets panel."
-                : "We encountered an error while retrieving the product data. Please try again later."}
-            </p>
-            <button 
-              onClick={onClose}
-              className="bg-white text-red-700 px-6 py-2 rounded-lg text-sm font-bold shadow-sm"
-            >
-              Return to Catalog
-            </button>
-          </div>
-        ) : (
-          <div className="article-content">
-            <ReactMarkdown
-              components={{
-                h2: ({ ...props }) => <h2 className="text-2xl font-bold text-slate-800 mt-12 mb-6" {...props} />,
-                h3: ({ ...props }) => <h3 className="text-xl font-bold text-slate-800 mt-8 mb-4 border-l-4 border-emerald-500 pl-4" {...props} />,
-                p: ({ ...props }) => <p className="text-slate-600 leading-relaxed mb-6" {...props} />,
-                ul: ({ ...props }) => <ul className="list-disc list-outside ml-6 space-y-3 mb-8 text-slate-600" {...props} />,
-                li: ({ ...props }) => <li className="pl-2" {...props} />,
-                strong: ({ ...props }) => <strong className="text-emerald-700 font-extrabold" {...props} />,
-              }}
-            >
-              {content}
-            </ReactMarkdown>
-          </div>
-        )}
+        <div className="article-content">
+          <ReactMarkdown
+            components={{
+              h2: ({ ...props }) => <h2 className="text-2xl font-bold text-slate-800 mt-12 mb-6" {...props} />,
+              h3: ({ ...props }) => <h3 className="text-xl font-bold text-slate-800 mt-8 mb-4 border-l-4 border-emerald-500 pl-4" {...props} />,
+              p: ({ ...props }) => <p className="text-slate-600 leading-relaxed mb-6" {...props} />,
+              ul: ({ ...props }) => <ul className="list-disc list-outside ml-6 space-y-3 mb-8 text-slate-600" {...props} />,
+              li: ({ ...props }) => <li className="pl-2" {...props} />,
+              strong: ({ ...props }) => <strong className="text-emerald-700 font-extrabold" {...props} />,
+            }}
+          >
+            {content}
+          </ReactMarkdown>
+        </div>
 
         <div className="mt-20 pt-10 border-t border-slate-100 flex flex-col md:flex-row justify-between items-center gap-8">
           <p className="text-xs text-slate-400 font-medium max-w-md">
@@ -168,6 +155,7 @@ const ArticleView = ({ product, onClose }: { product: any; onClose: () => void }
     </motion.div>
   );
 };
+
 
 const Navbar = () => {
   const [isScrolled, setIsScrolled] = useState(false);
