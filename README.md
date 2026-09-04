@@ -1,97 +1,33 @@
 # TIENS Somalia Website
 
-A responsive React website designed to present TIENS health and wellness products for customers in Somalia.
-
-## Overview
-
-The application provides a product focused web experience with a home page, product catalog, product information views, company information, contact details, and responsive navigation.
-
-The project includes a catalog of six products:
-
-1. TIENS Nutrient Calcium
-2. Zinc Supplements
-3. Pure Cordyceps
-4. Chitosan Capsules
-5. Spirulina Capsules
-6. Lipid Metabolic Tea
-
-Each product has a category, description, image, and a detailed information view rendered from structured Markdown content.
+A single page product catalogue for TIENS health and wellness products in Somalia.
 
 ## Features
 
-1. Responsive navigation and page layout
-2. Product catalog with category information
-3. Detailed product information views
-4. Animated page and component transitions
-5. Markdown based product content rendering
-6. Contact information and social media links
-7. Responsive layouts for desktop and mobile screens
+1. Responsive navigation and landing page sections for company information, business opportunity content, and contact details.
+2. A catalogue of six products with categories, descriptions, and image links.
+3. Full screen product detail views rendered from Markdown held in the application source.
+4. Motion based interface transitions and responsive layouts.
 
 ## Technology
 
-The project is built with React 19 and TypeScript and uses Vite as the development and build tool.
-
-Main libraries and tools include:
-
-1. React
-2. TypeScript
-3. Vite
-4. Tailwind CSS
-5. Motion
-6. React Markdown
-7. Lucide React
-8. Express
+The frontend uses React 19, TypeScript, Vite, Tailwind CSS, Motion, React Markdown, and Lucide React.
 
 ## Project Structure
 
-The main application code is located in the `src` directory. The main application component contains the product catalog and product information logic, while supporting components provide the user interface and navigation experience.
+`src/App.tsx` contains the application interface, product catalogue, and product detail content. `src/index.css` contains global styles, and `src/main.tsx` starts the React application.
 
-## Requirements
+## Run Locally
 
-Node.js and npm are required to run the project locally.
-
-## Installation
-
-Clone the repository and install the project dependencies.
+Node.js and npm are required.
 
 ```bash
-git clone https://github.com/hassankaafi72/-Tiens-Somalia-website.git
-cd -Tiens-Somalia-website
 npm install
-```
-
-## Development
-
-Start the development server with:
-
-```bash
 npm run dev
 ```
 
-The development server runs on port 3000 according to the project configuration.
+The development server is configured for port 3000. Create a production build with `npm run build`, preview it with `npm run preview`, and run TypeScript checks with `npm run lint`.
 
-## Production Build
+## Current Limitations
 
-Create a production build with:
-
-```bash
-npm run build
-```
-
-Preview the production build with:
-
-```bash
-npm run preview
-```
-
-## Type Checking
-
-Run the project's TypeScript check with:
-
-```bash
-npm run lint
-```
-
-## Project Scope
-
-This repository contains the frontend application for presenting TIENS products and related information. Product information is currently defined within the application source code.
+This is a static frontend. Product information, contact details, and external image URLs are defined in `src/App.tsx`. It has no backend, product ordering flow, content management system, or verified product data source.
